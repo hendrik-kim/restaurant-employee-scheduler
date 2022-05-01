@@ -1,29 +1,16 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
-  const [products, setProducts] = useState([
-    { name: 'product1', price: 100.0 },
-    { name: 'product2', price: 200.0 },
-  ]);
+import HomeScreen from './screens/HomeScreen';
 
-  useEffect(() => {
-    fetch('https://localhost:5001/api/products')
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
-
+const App = () => {
   return (
-    <div className='App'>
-      <h1>Hook Example</h1>
-      <ul>
-        {products.map((item, index) => (
-          <li key={index}>
-            {item.name} - {item.price}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<HomeScreen />} exact />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

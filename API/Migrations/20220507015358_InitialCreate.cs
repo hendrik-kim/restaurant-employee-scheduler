@@ -3,20 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
-    public partial class IdentityAdded : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<double>(
-                name: "Price",
-                table: "Products",
-                type: "REAL",
-                nullable: false,
-                oldClrType: typeof(decimal),
-                oldType: "TEXT");
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -36,6 +28,7 @@ namespace API.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -54,6 +47,20 @@ namespace API.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Price = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,30 +169,51 @@ namespace API.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "04b9dd93-2578-4034-9ff5-17a091b567af", "4d47c7ff-58b2-4e1e-9a95-70cdcc913dd3", "Owner", "OWNER" });
+            migrationBuilder.CreateTable(
+                name: "AvailableDates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    StartDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmployeeId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AvailableDates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AvailableDates_AspNetUsers_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "48d7dce3-affc-4f22-8e4b-1506c023f726", "4f4ab712-4135-4699-ab52-3df63c66137d", "Employee", "EMPLOYEE" });
+                values: new object[] { "217ba22a-441a-4ebb-8a11-384f0739015e", "9391afb6-73b5-4a64-a9e4-1cabc2b46af1", "Member", "MEMBER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "548b7c4d-14f3-45e1-9aae-42fdb8764067", "dcc61d8b-73e5-4e08-80f5-45803ec099ae", "Manager", "MANAGER" });
+                values: new object[] { "2c466fbc-f0b7-4a93-bf5c-91fed20cba76", "fa01d75a-f5ea-47a1-ac43-07dbd615e5c5", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c3f08e03-2cf3-4119-abfb-a5d0df074047", "6c43a16d-9776-46ae-8d07-e89176e9e29d", "Member", "MEMBER" });
+                values: new object[] { "33432199-2297-41a8-bac9-66f2c6f6a7b5", "f07d494a-396f-4f4c-ba75-20494c30ee02", "Owner", "OWNER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c9bfe07e-06ab-48aa-9393-176604d267b5", "cb537e8e-9998-4f8b-a870-bb7e8f5b9307", "Admin", "ADMIN" });
+                values: new object[] { "61513510-cc2f-4f60-916c-22c39a54531f", "fd445e2e-93f8-4187-87a5-f5135f55d2ed", "Employee", "EMPLOYEE" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "7869dc8e-7897-49c3-977d-225fe34de3e6", "f705608a-f398-4f41-b907-0501d3b6dc8e", "Manager", "MANAGER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -223,6 +251,11 @@ namespace API.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AvailableDates_EmployeeId",
+                table: "AvailableDates",
+                column: "EmployeeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -243,18 +276,16 @@ namespace API.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AvailableDates");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.AlterColumn<decimal>(
-                name: "Price",
-                table: "Products",
-                type: "TEXT",
-                nullable: false,
-                oldClrType: typeof(double),
-                oldType: "REAL");
         }
     }
 }

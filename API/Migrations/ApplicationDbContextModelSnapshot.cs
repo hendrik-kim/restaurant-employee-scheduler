@@ -3,18 +3,16 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220501234312_IdentityAdded")]
-    partial class IdentityAdded
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -36,6 +34,31 @@ namespace API.Data.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("API.Entities.ScheduleAggregate.AvailableDate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("AvailableDates");
+                });
+
             modelBuilder.Entity("API.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -46,6 +69,10 @@ namespace API.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -98,6 +125,8 @@ namespace API.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -128,36 +157,36 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "548b7c4d-14f3-45e1-9aae-42fdb8764067",
-                            ConcurrencyStamp = "dcc61d8b-73e5-4e08-80f5-45803ec099ae",
+                            Id = "7869dc8e-7897-49c3-977d-225fe34de3e6",
+                            ConcurrencyStamp = "f705608a-f398-4f41-b907-0501d3b6dc8e",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "48d7dce3-affc-4f22-8e4b-1506c023f726",
-                            ConcurrencyStamp = "4f4ab712-4135-4699-ab52-3df63c66137d",
+                            Id = "61513510-cc2f-4f60-916c-22c39a54531f",
+                            ConcurrencyStamp = "fd445e2e-93f8-4187-87a5-f5135f55d2ed",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "04b9dd93-2578-4034-9ff5-17a091b567af",
-                            ConcurrencyStamp = "4d47c7ff-58b2-4e1e-9a95-70cdcc913dd3",
+                            Id = "33432199-2297-41a8-bac9-66f2c6f6a7b5",
+                            ConcurrencyStamp = "f07d494a-396f-4f4c-ba75-20494c30ee02",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "c3f08e03-2cf3-4119-abfb-a5d0df074047",
-                            ConcurrencyStamp = "6c43a16d-9776-46ae-8d07-e89176e9e29d",
+                            Id = "217ba22a-441a-4ebb-8a11-384f0739015e",
+                            ConcurrencyStamp = "9391afb6-73b5-4a64-a9e4-1cabc2b46af1",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "c9bfe07e-06ab-48aa-9393-176604d267b5",
-                            ConcurrencyStamp = "cb537e8e-9998-4f8b-a870-bb7e8f5b9307",
+                            Id = "2c466fbc-f0b7-4a93-bf5c-91fed20cba76",
+                            ConcurrencyStamp = "fa01d75a-f5ea-47a1-ac43-07dbd615e5c5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -265,6 +294,22 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("API.Entities.Employee", b =>
+                {
+                    b.HasBaseType("API.Entities.User");
+
+                    b.HasDiscriminator().HasValue("Employee");
+                });
+
+            modelBuilder.Entity("API.Entities.ScheduleAggregate.AvailableDate", b =>
+                {
+                    b.HasOne("API.Entities.Employee", "Employee")
+                        .WithMany("AvailableDates")
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -314,6 +359,11 @@ namespace API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Entities.Employee", b =>
+                {
+                    b.Navigation("AvailableDates");
                 });
 #pragma warning restore 612, 618
         }

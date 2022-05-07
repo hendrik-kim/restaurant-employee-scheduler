@@ -1,5 +1,6 @@
 using System.Text;
 using API.Entities;
+using API.Entities.ScheduleAggregate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace API.Data
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<AvailableDate> AvailableDates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

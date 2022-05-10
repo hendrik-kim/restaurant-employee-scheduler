@@ -5,14 +5,14 @@ import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 
 const App = () => {
-  return (
-    <Router>
-      <Routes>
-        {/* <Route path='/' element={<HomeScreen />} exact /> */}
-        <Route path='/' element={<LoginScreen />} exact />
-      </Routes>
-    </Router>
-  );
+	return (
+		<Router>
+			<Routes>
+				<Route path='/' element={<HomeScreen />} exact />
+				<Route path='/login' element={<LoginScreen />} exact />
+			</Routes>
+		</Router>
+	);
 };
 
 export default App;

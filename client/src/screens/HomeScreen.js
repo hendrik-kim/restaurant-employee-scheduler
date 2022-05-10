@@ -11,6 +11,7 @@ const HomeScreen = () => {
       .then((res) => res.json())
       .then((data) => setProducts(data));
   }, []);
+
   return (
     <div>
       <h1>Hook Example</h1>

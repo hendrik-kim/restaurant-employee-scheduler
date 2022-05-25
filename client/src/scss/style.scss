@@ -1,0 +1,9 @@
+@import './reset';
+
+//--common
+@import 'common/header';
+@import 'common/footer';
+
+//--screen
+@import 'screens/homescreen';
+@import 'screens/loginscreen';

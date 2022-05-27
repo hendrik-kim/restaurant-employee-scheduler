@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 
 const HomeScreen = () => {
-	const [products, setProducts] = useState([
-		{ name: 'product1', price: 100.0 },
-		{ name: 'product2', price: 200.0 },
-	]);
+	// const [products, setProducts] = useState([
+	// 	{ name: 'product1', price: 100.0 },
+	// 	{ name: 'product2', price: 200.0 },
+	// ]);
 
-	useEffect(() => {
-		fetch('https://localhost:5001/api/products')
-			.then((res) => res.json())
-			.then((data) => setProducts(data));
-	}, []);
+	// useEffect(() => {
+	// 	fetch('https://localhost:5001/api/products')
+	// 		.then((res) => res.json())
+	// 		.then((data) => setProducts(data));
+	// }, []);
 
 	return (
 		<div className='home'>

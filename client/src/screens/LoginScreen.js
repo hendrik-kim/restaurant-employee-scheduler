@@ -71,8 +71,7 @@ const LoginScreen = () => {
 								/>
 							</Stack>
 							<div>
-								{' '}
-								<Button variant='contained' input type='submit'>
+								<Button variant='contained' type='submit'>
 									LOGIN
 								</Button>
 							</div>
